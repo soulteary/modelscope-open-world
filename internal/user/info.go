@@ -6,16 +6,17 @@ import (
 	"github.com/soulteary/modelscope-open-world/api/modelscope"
 )
 
-type UserInfo struct {
+type Info struct {
 	Email        string `json:"Email"`
 	GitlabUserID int    `json:"GitlabUserID"`
 	HavanaID     string `json:"HavanaID"`
 	Name         string `json:"Name"`
 	IsRealName   bool   `json:"IsRealName"`
+	AccessToken  string `json:"AccessToken"`
 }
 
 // Basic information provided to third-party software for user login
-func GetBasicUserInfo(cookies string) (result UserInfo, err error) {
+func GetBasicUserInfo(cookies string) (result Info, err error) {
 	info, err := modelscope.GetUserInfo(cookies)
 	if err != nil {
 		return result, err
@@ -25,11 +26,12 @@ func GetBasicUserInfo(cookies string) (result UserInfo, err error) {
 		return result, fmt.Errorf(info.Message)
 	}
 
-	return UserInfo{
-		Email:        info.Data.Email,
-		GitlabUserID: info.Data.GitlabUserID,
-		HavanaID:     info.Data.HavanaID,
-		Name:         info.Data.Name,
-		IsRealName:   info.Data.IsRealName,
-	}, nil
+	result.Email = info.Data.Email
+	result.GitlabUserID = info.Data.GitlabUserID
+	result.HavanaID = info.Data.HavanaID
+	result.Name = info.Data.Name
+	result.IsRealName = info.Data.IsRealName
+	result.AccessToken = info.Data.AccessToken
+
+	return result, nil
 }
